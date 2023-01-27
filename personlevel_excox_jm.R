@@ -1,4 +1,43 @@
-source("create_personleveldata.R")
+library(dplyr)
+library(survival)
+library(Matrix)
+library(lme4)
+library(nlme)
+library(splines)
+library(statmod)
+library(JointModel)
+library(MASS)
+library(JM)
+library(Rcpp)
+library(here)
+library(tidyverse)
+library(kableExtra)
+library(ggridges)
+library(rstanarm)
+
+# read the personlevel data
+tldat <- read.csv("vadls_jm_personlevel.csv", header = TRUE)
+
+## data for extended Cox model 
+tddat <- tldat %>%
+  rename(tstart = year) %>%
+  group_by(id) %>%
+  mutate(tstop = dplyr::lead(tstart),
+         TL = dplyr::lead(TL)) %>%
+  dplyr::filter(row_number()!=n()|n()==1)
+
+## data for joint model
+tlLong <- tldat 
+
+lastdat <- tldat %>%
+  group_by(id) %>%
+  arrange(year) %>%
+  dplyr::slice(n()) %>%
+  ungroup 
+
+tlSurv <- lastdat %>%
+  dplyr::select(id, year, TL, baseage, college, basesmoke, basebmi, basenumteeth) %>%
+  rename(years=year)  
 
 
 ### extended Cox model

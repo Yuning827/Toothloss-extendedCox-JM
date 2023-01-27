@@ -1,22 +1,13 @@
 ## descriptive analysis -- person level
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
 library(lattice)
 
-tldat <- read.csv("vadls_jm_person_synthetic.csv", header = TRUE)
-
-# number of patients
-length(unique(tldat$id))
-
-# number of patients who lost at least one tooth
-length(unique(tldat[which(tldat$TL == 1),]$id))
-
-# median length to first tooth loss
-median(tldat[which(tldat$TL == 1),]$year)
-
-# maximum number of years of follow-up
-max(tldat$year)
+tldat <- read.csv("vadls_jm_personlevel.csv", header = TRUE)
 
 
-va.samp <- subset(tldat, id %in% c(1510,1956,2199,2212)) %>%
+va.samp <- subset(tldat, id %in% c(144,286,364,369)) %>%
   pivot_longer(cols = c(pctpocket5mm, pctabl40, pctmobil05mm),
                names_to = "biomarkers",
                values_to = "percentage") %>%

@@ -1,4 +1,43 @@
-source("create_toothleveldata.R")
+library(dplyr)
+library(survival)
+library(Matrix)
+library(lme4)
+library(nlme)
+library(splines)
+library(statmod)
+library(JointModel)
+library(MASS)
+library(JM)
+library(Rcpp)
+library(here)
+library(tidyverse)
+library(kableExtra)
+library(ggridges)
+library(rstanarm)
+
+# read the toothlevel data
+vadls <- read.csv("vadls_jm_toothlevel.csv", header = TRUE)
+
+## longitudinal data
+valong <- vadls
+
+## survival data
+vasurv <- vadls %>%
+  dplyr::group_by(id, tooth) %>%
+  mutate(basepock = maxpock[1L],
+         basesmoke = smoking[1L]) %>%
+  arrange(obstime) %>%
+  slice(n()) %>%
+  ungroup() 
+
+## data for extended Cox model 
+tdsurv <- tmerge(vasurv, vasurv, id = idtooth, endpt = event(time, tloss) )
+tdsurv <- tmerge(tdsurv, vadls, id = idtooth,
+                 maxpock = tdc(obstime, maxpock),
+                 smoking = tdc(obstime, smoking),
+                 bmi = tdc(obstime, basebmi))
+
+
 
 # base Cox model
 basecox <- coxph(Surv(time, tloss) ~  basepock + baseage + basebmi + basesmoke +college,
