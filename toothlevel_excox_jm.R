@@ -38,13 +38,6 @@ tdsurv <- tmerge(tdsurv, vadls, id = idtooth,
                  bmi = tdc(obstime, basebmi))
 
 
-
-# base Cox model
-basecox <- coxph(Surv(time, tloss) ~  basepock + baseage + basebmi + basesmoke +college,
-                 data = vasurv, cluster = id)
-summary(basecox)
-
-
 # extended Cox model
 tdcox <- coxph(Surv(tstart, tstop, endpt) ~ maxpock + baseage + basebmi + basesmoke +college,
                data = tdsurv, cluster = id)
