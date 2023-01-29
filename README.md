@@ -1,6 +1,6 @@
 # Compare joint model compared with extended Cox regression model
 
-R codes for the paper "Modeling time-varying risk factors of tooth loss: results from joint model compared to extended Cox regression model"
+R codes for the paper "Modeling time-varying risk factors of tooth loss: results from joint model compared to extended Cox regression model". We provided example datasets to illustrate the models in the paper instead of the original dataset. The results from example datasets are different to the results in the paper. 
 
 ## vadls_jm_personlevel.csv 
 
