@@ -1,12 +1,8 @@
-## descriptive analysis -- person level
-library(ggplot2)
-library(dplyr)
 library(tidyverse)
-library(lattice)
 
 tldat <- read.csv("vadls_jm_personlevel.csv", header = TRUE)
 
-
+# select four patients id=255, 286, 364, 369 for figure
 va.samp <- subset(tldat, id %in% c(144,286,364,369)) %>%
   pivot_longer(cols = c(pctpocket5mm, pctabl40, pctmobil05mm),
                names_to = "biomarkers",

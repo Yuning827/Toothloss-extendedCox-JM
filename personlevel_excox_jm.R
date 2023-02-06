@@ -1,4 +1,3 @@
-library(dplyr)
 library(survival)
 library(Matrix)
 library(lme4)
@@ -11,11 +10,10 @@ library(JM)
 library(Rcpp)
 library(here)
 library(tidyverse)
-library(kableExtra)
 library(ggridges)
 library(rstanarm)
 
-# read the personlevel data
+# read the person-level data
 tldat <- read.csv("vadls_jm_personlevel.csv", header = TRUE)
 
 ## data for extended Cox model 
@@ -47,15 +45,13 @@ summary(td.tl)
 
 
 ### joint model
-
-jm.tl <- stan_jm(formulaLong = list(pctpocket5mm ~ year + (1 + year| id), # adding baseline covariates did not change the results
+jm.tl <- stan_jm(formulaLong = list(pctpocket5mm ~ year + (1 + year| id), # three longitudinal submodels
                                     pctmobil05mm ~ year + (1 + year| id),
                                     pctabl40 ~ year + (1 + year| id)),
                  dataLong = tlLong,
-                 formulaEvent = Surv(years, TL) ~ baseage + basebmi + basesmoke +college + basenumteeth,
+                 formulaEvent = Surv(years, TL) ~ baseage + basebmi + basesmoke + college + basenumteeth, # survival submodel
                  dataEvent = tlSurv,
                  time_var = "year",
-                 # this next line is only to keep the example small in size!
                  chains = 1, cores = 1, seed = 12345, iter = 1000)
 print(jm.tl)
 summary(jm.tl, probs = c(0.025, 0.975))

@@ -1,4 +1,3 @@
-library(dplyr)
 library(survival)
 library(Matrix)
 library(lme4)
@@ -11,11 +10,10 @@ library(JM)
 library(Rcpp)
 library(here)
 library(tidyverse)
-library(kableExtra)
 library(ggridges)
 library(rstanarm)
 
-# read the toothlevel data
+# read the tooth-level data
 vadls <- read.csv("vadls_jm_toothlevel.csv", header = TRUE)
 
 ## longitudinal data
@@ -38,7 +36,7 @@ tdsurv <- tmerge(tdsurv, vadls, id = idtooth,
                  bmi = tdc(obstime, basebmi))
 
 
-# extended Cox model
+### extended Cox model
 tdcox <- coxph(Surv(tstart, tstop, endpt) ~ maxpock + baseage + basebmi + basesmoke +college,
                data = tdsurv, cluster = id)
 
@@ -46,7 +44,7 @@ summary(tdcox)
 
 
 
-# joint model
+### joint model
 # first, fit longitudinal submodel
 jmlong <- lme(maxpock ~ obstime,
               random = ~ obstime | idtooth,
