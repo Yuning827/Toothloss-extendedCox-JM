@@ -1,4 +1,4 @@
-# Compare joint model compared with extended Cox regression model
+# Compare joint model with extended Cox regression model
 
 R codes for the paper "Joint models to estimate risk of tooth loss from time-varying covariates". We provided example datasets to illustrate the models in the paper instead of the original dataset. The results from example datasets are different to the results in the paper. 
 
