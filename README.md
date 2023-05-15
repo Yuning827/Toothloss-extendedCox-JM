@@ -41,3 +41,17 @@ The code includes:
 ## figure_percentpdlong.R
 
 R code for creating longitudinal trajectories of periodontal measurements of four patients
+
+## simulation_stable.R
+
+R code for running simulation study
+
+The code includes:
+
+1. generate simulated dataset assuming a lme model for the exogenous covariate and a frailty model with positive stable distributed frailty term for the time-to-event outcome. 
+
+2. run the simulation 1000 times
+
+3. compare the following 4 models: a coxph model assuming that the exogenous covariate is constant, a coxme model assuming that the exogenous covariate is constant, an extended model, and a joint model. 
+
+
