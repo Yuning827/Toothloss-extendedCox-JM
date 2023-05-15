@@ -1,17 +1,6 @@
-#### extended Cox and JM simulation 
-setwd("/Users/f.x.y/Library/Mobile Documents/com~apple~CloudDocs/UofT/Toothloss-extendedCox-JM")
-#setwd("/scratch/a/amitani/seanf/Conditional.Ordinal.survival/")
-#### batch simulation arguments ####
-
-## First read in the arguments listed at the command line
 args <- (commandArgs(TRUE))
 print(args)
 
-## args is now a list of character vectors.
-## First check to see if arguments are passed.
-## Then cycle through each element of the list and evaluate the expressions.
-
-## If there's no elements in the argument, then supply default values
 if (length(args)==0){
   print("No arguments supplied.")
   
@@ -28,30 +17,7 @@ if (length(args)==0){
   N <- 100 # total_patients
   teeth_min <- 22
   teeth_max <- 28
-  
-  # # fixed effect 
-  # delta = 1
-  # gamma_0 = -0.5
-  # gamma_1 = 0.2
-  # gamma_2 = -0.8
-  # alpha = 0.2
-  # beta_0 = 0.5
-  # beta_1 = 0.1
-  # beta_2 = 0.3
-  # beta_3 = -0.2
-  # 
-  # # covariance matrix and mean of random effects
-  # b_covmat <- matrix(c(0.5, 0, 0, 0.3), 2, 2)
-  # b_means <- rep(0, 2)
-  # residual_sd <- 0.5
-  
-  # # frailty variance 
-  # r_sigma2 <- 0.2 # 0 or 1? 
-  # 
-  # # x1 is a binary covariate, x2 is a normal covariate
-  # x1_p <- 0.45
-  # x2_sigma2 <- 1
-  
+ 
   # fixed effect 
   delta = 1
   gamma_0 = -1
@@ -73,9 +39,7 @@ if (length(args)==0){
   
   # x1 is a binary covariate, x2 is a normal covariate
   x1_p <- 0.5
-  x1_sigma2 <- 1
   x2_sigma2 <- 1
-  x2_p <- 0.8
 } else{
   for (i in (1:length(args))) eval(parse(text=args[[i]]))
 }
@@ -165,9 +129,7 @@ simulation.func <- function(x){
       frailty_theta <- pi * runif(N, 0, 1)
       frailty_a <- (sin(frailty_alpha*frailty_theta)/sin(frailty_theta))^(1/(1-frailty_alpha)) * 
         (sin((1-frailty_alpha)*frailty_theta)/sin(frailty_alpha*frailty_theta))
-      #frailty_a <- sin((1-frailty_alpha)*frailty_theta)*(sin(frailty_alpha*frailty_theta))^(frailty_alpha/(1-frailty_alpha))/
-      #  sin(frailty_theta)^(1/(1-frailty_alpha))
-      
+   
       frailty <- (frailty_a/frailty_e)^((1-frailty_alpha)/frailty_alpha)
       
       frailty_i <- rep(frailty, M)
@@ -177,13 +139,11 @@ simulation.func <- function(x){
       betas$frailty_i <- frailty_i
       # a data frame of covariates
       x1 <- stats::rbinom(N, 1, x1_p)
-      #x1 <- stats::rnorm(N, 0, x1_sigma2)
       x1 <- rep(x1, M)
       x2 <- stats::rnorm(N, 0, x2_sigma2)
       x2 <- rep(x2, M)
       covdat <- data.frame(x1,x2)
-      #x2 = stats::rbinom(MN, 1, x2_p))
-      
+
       
       # generate the tooth-level survival time
       times <- simsurv(hazard = haz, x = covdat, betas = betas, maxt=max_time)
@@ -273,7 +233,6 @@ simulation.func <- function(x){
       sim_jmtloss <- fitjm(sim_data_long, sim_data_surv)
       jm_var <- solve(sim_jmtloss$Hessian)
       #### model summary ####
-      #    jm_var <- solve(sim_jmtloss$Hessian)
       basecox_coef <- basecox$coefficients
       coxme_coef <- coxmemod$coefficients
       td_coef <- sim_tdcox$coefficients
