@@ -1,6 +1,3 @@
-setwd("/Users/f.x.y/Library/Mobile Documents/com~apple~CloudDocs/UofT/Toothloss-extendedCox-JM")
-
-
 args <- (commandArgs(TRUE))
 print(args)
 
