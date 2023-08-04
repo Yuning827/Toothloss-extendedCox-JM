@@ -45,9 +45,9 @@ summary(td.tl)
 
 
 ### joint model
-jm.tl <- stan_jm(formulaLong = list(pctpocket5mm ~ year + (1 + year| id), # three longitudinal submodels
-                                    pctmobil05mm ~ year + (1 + year| id),
-                                    pctabl40 ~ year + (1 + year| id)),
+jm.tl <- stan_jm(formulaLong = list(pctpocket5mm ~ baseage + basebmi + basesmoke + college + basenumteeth + bs(year, degree = 3) + (1 + year| id), # three longitudinal submodels
+                                    pctmobil05mm ~ baseage + basebmi + basesmoke + college + basenumteeth + bs(year, degree = 3) + (1 + year| id),
+                                    pctabl40 ~ baseage + basebmi + basesmoke + college + basenumteeth + bs(year, degree = 3) + (1 + year| id)),
                  dataLong = tlLong,
                  formulaEvent = Surv(years, TL) ~ baseage + basebmi + basesmoke + college + basenumteeth, # survival submodel
                  dataEvent = tlSurv,
