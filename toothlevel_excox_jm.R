@@ -4,7 +4,7 @@ library(lme4)
 library(nlme)
 library(splines)
 library(statmod)
-library(JointModel)
+#library(JointModel)
 library(MASS)
 library(JM)
 library(Rcpp)
@@ -15,6 +15,7 @@ library(rstanarm)
 
 # read the tooth-level data
 vadls <- read.csv("vadls_jm_toothlevel.csv", header = TRUE)
+head(vadls)
 
 ## longitudinal data
 valong <- vadls
