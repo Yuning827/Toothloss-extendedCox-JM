@@ -16,6 +16,8 @@ library(rstanarm)
 # read the tooth-level data
 vadls <- read.csv("vadls_jm_toothlevel.csv", header = TRUE)
 head(vadls)
+summary(vadls)
+str(vadls)
 
 ## longitudinal data
 valong <- vadls
@@ -23,15 +25,24 @@ valong <- vadls
 ## survival data
 vasurv <- vadls %>%
   dplyr::group_by(id, tooth) %>%
-  mutate(basepock = maxpock[1L],
-         basesmoke = smoking[1L]) %>%
+  mutate(basepock = maxpock[1L], #set the base pock value by 'maxpock' at the starting point
+    basesmoke = smoking[1L] ) %>% #set the base smoking status by 'smoking' at the starting point
   arrange(obstime) %>%
+  #select the data at the last observation
   slice(n()) %>%
   ungroup() 
+#id1 = vasurv %>% filter(id == "1") %>% arrange(tooth)
+#id1_s = vasurv %>% filter(id == "1")
+
 
 ## data for extended Cox model 
-tdsurv <- tmerge(vasurv, vasurv, id = idtooth, endpt = event(time, tloss) )
+tdsurv <- tmerge(vasurv, #data1: baseline data to be retained in the analysis dataset
+                 vasurv, #data2: source for new data including events and time-dependent covariates
+                 id = idtooth, #identifier to merge data together
+                 endpt = event(time, tloss) # set time range for each subject
+                 )
 tdsurv <- tmerge(tdsurv, vadls, id = idtooth,
+                 #time dependent covariates
                  maxpock = tdc(obstime, maxpock),
                  smoking = tdc(obstime, smoking),
                  bmi = tdc(obstime, basebmi))
@@ -99,4 +110,5 @@ jmtloss <- jointModel(jmlong, jmcox,
                       method = "piecewise-PH-aGH")
 
 summary(jmtloss)
+#exp(Assoct)
 
